@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Itinerary Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
+    <style>
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="loading">
+        <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Travel Itinerary Management System</h1>
+        
+        <form id="itineraryForm" class="max-w-4xl mx-auto space-y-6">
+            <!-- Client Details Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Client Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2">Name</label>
+                        <input type="text" name="clientName" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Contact</label>
+                        <input type="tel" name="contact" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Email</label>
+                        <input type="email" name="email" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Destination</label>
+                        <input type="text" name="destination" required class="w-full p-2 border rounded">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Travel Details Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Travel Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2">Travel Start Date</label>
+                        <input type="date" name="startDate" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Travel End Date</label>
+                        <input type="date" name="endDate" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Number of Adults</label>
+                        <input type="number" name="adults" min="1" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Number of Rooms</label>
+                        <input type="number" name="rooms" min="1" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Children (2-12 years)</label>
+                        <input type="number" name="children" min="0" class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Infants (0-2 years)</label>
+                        <input type="number" name="infants" min="0" class="w-full p-2 border rounded">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotel Details Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Hotel Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2">Hotel Name</label>
+                        <input type="text" name="hotelName" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Room Type</label>
+                        <select name="roomType" required class="w-full p-2 border rounded">
+                            <option value="">Select Room Type</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Deluxe">Deluxe</option>
+                            <option value="Suite">Suite</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Meal Plan</label>
+                        <select name="mealPlan" required class="w-full p-2 border rounded">
+                            <option value="">Select Meal Plan</option>
+                            <option value="CP">CP Plan (Room + Breakfast)</option>
+                            <option value="MAP">MAP Plan (Room + Breakfast + Dinner)</option>
+                            <option value="AP">AP Plan (Room + All Meals)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transfer Details Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Transfer Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2">Arrival Location</label>
+                        <select name="arrivalType" required class="w-full p-2 border rounded">
+                            <option value="airport">Airport</option>
+                            <option value="railway">Railway Station</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Arrival Time</label>
+                        <input type="time" name="arrivalTime" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Departure Location</label>
+                        <select name="departureType" required class="w-full p-2 border rounded">
+                            <option value="airport">Airport</option>
+                            <option value="railway">Railway Station</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Departure Time</label>
+                        <input type="time" name="departureTime" required class="w-full p-2 border rounded">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Itinerary Builder Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Day-wise Itinerary</h2>
+                <div id="itineraryDays" class="space-y-4">
+                    <!-- Days will be added here dynamically -->
+                </div>
+                <button type="button" id="addDay" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Add Day
+                </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="saveTemplate" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">
+                    Save as Template
+                </button>
+                <button type="button" id="generateDoc" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                    Generate Document
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let dayCount = 0;
+
+        function addDayToItinerary() {
+            dayCount++;
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'border p-4 rounded';
+            dayDiv.innerHTML = `
+                <h3 class="font-semibold mb-2">Day ${dayCount}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2">Date</label>
+                        <input type="date" name="day${dayCount}Date" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Excursion Name</label>
+                        <input type="text" name="day${dayCount}Excursion" required class="w-full p-2 border rounded">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block mb-2">Description</label>
+                        <textarea name="day${dayCount}Description" required class="w-full p-2 border rounded" rows="3"></textarea>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Timing</label>
+                        <input type="time" name="day${dayCount}Timing" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Accommodation</label>
+                        <input type="text" name="day${dayCount}Accommodation" required class="w-full p-2 border rounded">
+                    </div>
+                </div>
+            `;
+            document.getElementById('itineraryDays').appendChild(dayDiv);
+        }
+
+        document.getElementById('addDay').addEventListener('click', addDayToItinerary);
+
+        // Add first day by default
+        addDayToItinerary();
+
+        document.getElementById('generateDoc').addEventListener('click', async () => {
+            const loading = document.querySelector('.loading');
+            loading.classList.add('active');
+
+            try {
+                // Collect form data
+                const formData = new FormData(document.getElementById('itineraryForm'));
+                const data = Object.fromEntries(formData.entries());
+
+                // Save to MongoDB
+                await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer BGFdxHYe6KXeRxsCs7GJWhLW1Yo2',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        appSlug: 'travel-itinerary-123456',
+                        action: 'create',
+                        collection: 'itineraries',
+                        data: data
+                    })
+                });
+
+                // Generate Word document
+                const doc = new docx.Document({
+                    sections: [{
+                        properties: {},
+                        children: [
+                            new docx.Paragraph({
+                                children: [
+                                    new docx.TextRun({
+                                        text: "Travel Itinerary",
+                                        bold: true,
+                                        size: 32
+                                    })
+                                ],
+                                alignment: docx.AlignmentType.CENTER
+                            }),
+                            // Add more document content here
+                        ]
+                    }]
+                });
+
+                // Generate and download the document
+                const blob = await docx.Packer.toBlob(doc);
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'itinerary.docx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                alert('Itinerary saved and document generated successfully!');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request.');
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+
+        document.getElementById('saveTemplate').addEventListener('click', async () => {
+            const loading = document.querySelector('.loading');
+            loading.classList.add('active');
+
+            try {
+                const formData = new FormData(document.getElementById('itineraryForm'));
+                const data = Object.fromEntries(formData.entries());
+
+                await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer BGFdxHYe6KXeRxsCs7GJWhLW1Yo2',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        appSlug: 'travel-itinerary-123456',
+                        action: 'create',
+                        collection: 'templates',
+                        data: data
+                    })
+                });
+
+                alert('Template saved successfully!');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while saving the template.');
+            } finally {
+                loading.classList.remove('active');
+            }
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
